@@ -11,8 +11,7 @@ import Wolf from '../../../assets/images/wolf.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 
-const SigninScreen = () => {
-  const { height } = useWindowDimensions();
+const SignupScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -43,11 +42,7 @@ const SigninScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
-        <Image
-          source={Wolf}
-          style={[styles.logo, { height: height * 0.3 }]}
-          resizeMode="contain"
-        />
+        <Text style={styles.title}>Create an account</Text>
         <CustomInput
           placeholder="Username"
           value={username}
@@ -93,7 +88,7 @@ const SigninScreen = () => {
   );
 };
 
-export default SigninScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   root: {
@@ -105,4 +100,5 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     maxHeight: 200,
   },
+  title: {},
 });
