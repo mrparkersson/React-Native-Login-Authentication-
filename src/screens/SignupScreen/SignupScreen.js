@@ -1,42 +1,29 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import SocialSiginButtons from '../../components/SocialSiginButtons';
 
-import Wolf from '../../../assets/images/wolf.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 
 const SignupScreen = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const onSignIn = () => {
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const onSignUp = () => {
     console.warn('Sign in');
   };
 
-  const onForgotPassword = () => {
-    console.warn('Forgot Password?');
+  const onSignIn = () => {
+    console.warn('Signup for a new account');
   };
 
-  const onSignInFacebook = () => {
-    console.warn('Signin with Facebook');
+  const onTermsOfUsePress = () => {
+    console.warn('Terms Pressed');
   };
 
-  const onSignInGoogle = () => {
-    console.warn('Sign in with Google');
-  };
-
-  const onSignInApple = () => {
-    console.warn('Sign in with Apple');
-  };
-
-  const onSignup = () => {
-    console.warn('Sign up for a new account');
+  const onPrivacyPolicyPress = () => {
+    console.warn('Privacy Pressed');
   };
 
   return (
@@ -48,39 +35,36 @@ const SignupScreen = () => {
           value={username}
           setValue={setUsername}
         />
+        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
         <CustomInput
           placeholder="Password"
           value={password}
           setValue={setPassword}
           secureTextEntry={true}
         />
-        <CustomButton text="Sign in" onPress={onSignIn} />
-        <CustomButton
-          text="Forgot Password?"
-          onPress={onForgotPassword}
-          type="TERTIARY"
+        <CustomInput
+          placeholder="Repeat password"
+          value={repeatPassword}
+          setValue={setRepeatPassword}
+          secureTextEntry={true}
         />
+        <CustomButton text="Register" onPress={onSignUp} />
+        <Text style={styles.text}>
+          By Registering, you confirm that you accept our{' '}
+          <Text style={styles.link} onPress={onTermsOfUsePress}>
+            Terms of Use
+          </Text>{' '}
+          and{' '}
+          <Text style={styles.link} onPress={onPrivacyPolicyPress}>
+            Privacy Policy
+          </Text>
+        </Text>
+
+        <SocialSiginButtons />
+
         <CustomButton
-          text="Sign in with Facebook"
-          onPress={onSignInFacebook}
-          bgColor="#e7eaf4"
-          fgColor="#4765a9"
-        />
-        <CustomButton
-          text="Sign in with Google"
-          onPress={onSignInGoogle}
-          bgColor="#fae9ea"
-          fgColor="#dd4d44"
-        />
-        <CustomButton
-          text="Sign in with Apple"
-          onPress={onSignInApple}
-          bgColor="#e3e3e3"
-          fgColor="#363636"
-        />
-        <CustomButton
-          text="Don't have an account? Create One"
-          onPress={onSignup}
+          text="Already have an account? Sign in"
+          onPress={onSignIn}
           type="TERTIARY"
         />
       </View>
@@ -95,10 +79,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  logo: {
-    width: '70%',
-    maxWidth: 300,
-    maxHeight: 200,
+  text: {
+    color: 'gray',
+    marginVertical: 10,
   },
-  title: {},
+  link: {
+    color: '#fdb075',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#051c60',
+    margin: 10,
+  },
 });

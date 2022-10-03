@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   ScrollView,
 } from 'react-native';
-
+import SocialSiginButtons from '../../components/SocialSiginButtons';
 import Wolf from '../../../assets/images/wolf.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -65,24 +65,7 @@ const SigninScreen = () => {
           onPress={onForgotPassword}
           type="TERTIARY"
         />
-        <CustomButton
-          text="Sign in with Facebook"
-          onPress={onSignInFacebook}
-          bgColor="#e7eaf4"
-          fgColor="#4765a9"
-        />
-        <CustomButton
-          text="Sign in with Google"
-          onPress={onSignInGoogle}
-          bgColor="#fae9ea"
-          fgColor="#dd4d44"
-        />
-        <CustomButton
-          text="Sign in with Apple"
-          onPress={onSignInApple}
-          bgColor="#e3e3e3"
-          fgColor="#363636"
-        />
+        <SocialSiginButtons />
         <CustomButton
           text="Don't have an account? Create One"
           onPress={onSignup}
