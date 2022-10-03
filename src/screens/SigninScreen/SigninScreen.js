@@ -10,34 +10,30 @@ import SocialSiginButtons from '../../components/SocialSiginButtons';
 import Wolf from '../../../assets/images/wolf.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import { useNavigation } from '@react-navigation/native';
 
 const SigninScreen = () => {
   const { height } = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   const onSignIn = () => {
     console.warn('Sign in');
+    //validate user
+
+    //after validation successful navigate to Home screen
+    navigation.navigate('Home');
   };
 
   const onForgotPassword = () => {
-    console.warn('Forgot Password?');
-  };
-
-  const onSignInFacebook = () => {
-    console.warn('Signin with Facebook');
-  };
-
-  const onSignInGoogle = () => {
-    console.warn('Sign in with Google');
-  };
-
-  const onSignInApple = () => {
-    console.warn('Sign in with Apple');
+    //navigate to forgot password screen
+    navigation.navigate('ForgotPassword');
   };
 
   const onSignup = () => {
-    console.warn('Sign up for a new account');
+    //navigate to Sign Up Screen component
+    navigation.navigate('SignUp');
   };
 
   return (

@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import SocialSiginButtons from '../../components/SocialSiginButtons';
-
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import { useNavigation } from '@react-navigation/native';
 
 const SignupScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const navigation = useNavigation();
+
   const onSignUp = () => {
-    console.warn('Sign in');
+    //send new user to the DB
+
+    //Navigate to Home screen is signup is successful
+    navigation.navigate('Home');
   };
 
   const onSignIn = () => {
-    console.warn('Signup for a new account');
+    navigation.navigate('SignIn');
   };
 
   const onTermsOfUsePress = () => {
