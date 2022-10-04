@@ -4,17 +4,19 @@ import SocialSiginButtons from '../../components/SocialSiginButtons';
 
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import { useNavigation } from '@react-navigation/native';
 
 const NewPasswordScreen = () => {
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const navigation = useNavigation();
 
   const onSubmit = () => {
-    console.warn('Sign in');
+    console.warn('Home');
   };
 
   const onBackToSignin = () => {
-    console.warn('On back to sign in ');
+    navigation.navigate('SignIn');
   };
 
   return (

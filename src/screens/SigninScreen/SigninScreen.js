@@ -11,15 +11,17 @@ import Wolf from '../../../assets/images/wolf.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
 
 const SigninScreen = () => {
   const { height } = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const { control, handleSubmit } = useForm();
 
-  const onSignIn = () => {
-    console.warn('Sign in');
+  const onSignIn = (data) => {
+    console.log(data);
     //validate user
 
     //after validation successful navigate to Home screen
@@ -45,17 +47,31 @@ const SigninScreen = () => {
           resizeMode="contain"
         />
         <CustomInput
+          name="username"
+          control={control}
           placeholder="Username"
-          value={username}
-          setValue={setUsername}
+          rules={{
+            required: 'Username is required',
+            minLength: {
+              value: 6,
+              message: 'Username should be minimum 6 characters',
+            },
+          }}
         />
         <CustomInput
+          name="password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
+          rules={{
+            required: 'Password is required',
+            minLength: {
+              value: 5,
+              message: 'Password should be minimum 5 characters',
+            },
+          }}
           secureTextEntry={true}
         />
-        <CustomButton text="Sign in" onPress={onSignIn} />
+        <CustomButton text="Sign in" onPress={handleSubmit(onSignIn)} />
         <CustomButton
           text="Forgot Password?"
           onPress={onForgotPassword}

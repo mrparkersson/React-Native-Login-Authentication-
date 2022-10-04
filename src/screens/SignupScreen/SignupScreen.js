@@ -16,7 +16,7 @@ const SignupScreen = () => {
     //send new user to the DB
 
     //Navigate to Home screen is signup is successful
-    navigation.navigate('Home');
+    navigation.navigate('ConfirmEmail');
   };
 
   const onSignIn = () => {
