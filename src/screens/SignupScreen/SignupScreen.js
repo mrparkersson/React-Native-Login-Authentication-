@@ -1,20 +1,46 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
 import SocialSiginButtons from '../../components/SocialSiginButtons';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
+import { Auth } from 'aws-amplify';
+
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
 const SignupScreen = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
   const navigation = useNavigation();
+  const { control, handleSubmit, watch } = useForm();
+  const pwd = watch('password');
 
-  const onSignUp = () => {
+  const [loading, setLoading] = useState();
+
+  const onSignUp = async (data) => {
+    const { username, password, email, name } = data;
+
+    if (loading) {
+      return;
+    }
+    //set Loading
+    setLoading(true);
+
+    try {
+      const response = await Auth.signUp({
+        username,
+        password,
+        attributes: { email, name },
+      });
+
+      console.log(response);
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
+
+    setLoading(false);
     //send new user to the DB
-
     //Navigate to Home screen is signup is successful
     navigation.navigate('ConfirmEmail');
   };
@@ -36,24 +62,57 @@ const SignupScreen = () => {
       <View style={styles.root}>
         <Text style={styles.title}>Create an account</Text>
         <CustomInput
+          name="username"
+          control={control}
           placeholder="Username"
-          value={username}
-          setValue={setUsername}
+          rules={{
+            required: 'Username is required',
+            maxLength: {
+              value: 10,
+              message: 'Username should be max 10 characters long',
+            },
+          }}
         />
-        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
         <CustomInput
+          name="email"
+          control={control}
+          placeholder="Email"
+          rules={{
+            required: 'Email is required',
+            pattern: { value: EMAIL_REGEX, message: 'Email is invalid' },
+          }}
+        />
+        <CustomInput
+          name="password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
           secureTextEntry={true}
+          rules={{
+            required: 'Password is required',
+            pattern: {
+              value: PASSWORD_REGEX,
+              message:
+                'Minimum eight characters, at least one uppercase letter, one lowercase letter and one number',
+            },
+            maxLength: {
+              value: 16,
+              message: 'Password should be max 16 characters',
+            },
+          }}
         />
         <CustomInput
+          name="repeatpassword"
+          control={control}
           placeholder="Repeat password"
-          value={repeatPassword}
-          setValue={setRepeatPassword}
           secureTextEntry={true}
+          rules={{
+            validate: (value) => value === pwd || 'Passwords do not match',
+          }}
         />
-        <CustomButton text="Register" onPress={onSignUp} />
+        <CustomButton
+          text={loading ? 'Loading' : 'Register'}
+          onPress={handleSubmit(onSignUp)}
+        />
         <Text style={styles.text}>
           By Registering, you confirm that you accept our{' '}
           <Text style={styles.link} onPress={onTermsOfUsePress}>

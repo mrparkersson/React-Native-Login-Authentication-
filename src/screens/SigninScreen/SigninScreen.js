@@ -5,27 +5,41 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import SocialSiginButtons from '../../components/SocialSiginButtons';
 import Wolf from '../../../assets/images/wolf.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { Auth } from 'aws-amplify';
 
 const SigninScreen = () => {
   const { height } = useWindowDimensions();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const { control, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
 
-  const onSignIn = (data) => {
-    console.log(data);
+  const onSignIn = async (data) => {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await Auth.signIn(data.username, data.password);
+      console.log(response);
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
+
+    setLoading(false);
+
     //validate user
-
     //after validation successful navigate to Home screen
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
   };
 
   const onForgotPassword = () => {
@@ -46,6 +60,19 @@ const SigninScreen = () => {
           style={[styles.logo, { height: height * 0.3 }]}
           resizeMode="contain"
         />
+
+        <CustomInput
+          name="name"
+          control={control}
+          placeholder="Name"
+          rules={{
+            required: 'Name is required',
+            minLength: {
+              value: 6,
+              message: 'Name should be minimum 6 characters long',
+            },
+          }}
+        />
         <CustomInput
           name="username"
           control={control}
@@ -54,7 +81,7 @@ const SigninScreen = () => {
             required: 'Username is required',
             minLength: {
               value: 6,
-              message: 'Username should be minimum 6 characters',
+              message: 'Username should be minimum 6 characters long',
             },
           }}
         />
@@ -66,12 +93,15 @@ const SigninScreen = () => {
             required: 'Password is required',
             minLength: {
               value: 5,
-              message: 'Password should be minimum 5 characters',
+              message: 'Password should be minimum 5 characters long',
             },
           }}
           secureTextEntry={true}
         />
-        <CustomButton text="Sign in" onPress={handleSubmit(onSignIn)} />
+        <CustomButton
+          text={loading ? 'Loading' : 'Sign in'}
+          onPress={handleSubmit(onSignIn)}
+        />
         <CustomButton
           text="Forgot Password?"
           onPress={onForgotPassword}
