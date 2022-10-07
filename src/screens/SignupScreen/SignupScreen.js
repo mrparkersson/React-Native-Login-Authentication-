@@ -28,13 +28,13 @@ const SignupScreen = () => {
     setLoading(true);
 
     try {
-      const response = await Auth.signUp({
+      await Auth.signUp({
         username,
         password,
-        attributes: { email, name },
+        attributes: { email, name, preferred_username: username },
       });
 
-      console.log(response);
+      navigation.navigate('ConfirmEmail', { username });
     } catch (error) {
       Alert.alert('Oops', error.message);
     }
@@ -42,7 +42,6 @@ const SignupScreen = () => {
     setLoading(false);
     //send new user to the DB
     //Navigate to Home screen is signup is successful
-    navigation.navigate('ConfirmEmail');
   };
 
   const onSignIn = () => {
@@ -61,6 +60,20 @@ const SignupScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Create an account</Text>
+
+        <CustomInput
+          name="name"
+          control={control}
+          placeholder="Name"
+          rules={{
+            required: 'Name is required',
+            minLength: {
+              value: 6,
+              message: 'Name should be minimum 6 characters long',
+            },
+          }}
+        />
+
         <CustomInput
           name="username"
           control={control}

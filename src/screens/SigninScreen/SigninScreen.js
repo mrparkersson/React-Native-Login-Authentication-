@@ -29,8 +29,8 @@ const SigninScreen = () => {
     setLoading(true);
 
     try {
-      const response = await Auth.signIn(data.username, data.password);
-      console.log(response);
+      await Auth.signIn(data.username, data.password);
+      navigation.navigate('Home');
     } catch (error) {
       Alert.alert('Oops', error.message);
     }
@@ -61,18 +61,6 @@ const SigninScreen = () => {
           resizeMode="contain"
         />
 
-        <CustomInput
-          name="name"
-          control={control}
-          placeholder="Name"
-          rules={{
-            required: 'Name is required',
-            minLength: {
-              value: 6,
-              message: 'Name should be minimum 6 characters long',
-            },
-          }}
-        />
         <CustomInput
           name="username"
           control={control}
