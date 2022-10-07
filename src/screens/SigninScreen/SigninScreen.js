@@ -25,9 +25,7 @@ const SigninScreen = () => {
     if (loading) {
       return;
     }
-
     setLoading(true);
-
     try {
       await Auth.signIn(data.username, data.password);
       navigation.navigate('Home');
@@ -36,15 +34,11 @@ const SigninScreen = () => {
     }
 
     setLoading(false);
-
-    //validate user
-    //after validation successful navigate to Home screen
-    // navigation.navigate('Home');
   };
 
   const onForgotPassword = () => {
     //navigate to forgot password screen
-    navigation.navigate('ForgotPassword');
+    navigation.navigate('ForgotPassword', {});
   };
 
   const onSignup = () => {

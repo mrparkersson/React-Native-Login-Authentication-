@@ -26,14 +26,14 @@ const SignupScreen = () => {
     }
     //set Loading
     setLoading(true);
-
     try {
+      //signup new users into aws,,, dynamo db
       await Auth.signUp({
         username,
         password,
         attributes: { email, name, preferred_username: username },
       });
-
+      //Navigate to confirm email page if successful...
       navigation.navigate('ConfirmEmail', { username });
     } catch (error) {
       Alert.alert('Oops', error.message);
@@ -41,7 +41,6 @@ const SignupScreen = () => {
 
     setLoading(false);
     //send new user to the DB
-    //Navigate to Home screen is signup is successful
   };
 
   const onSignIn = () => {
@@ -81,7 +80,7 @@ const SignupScreen = () => {
           rules={{
             required: 'Username is required',
             maxLength: {
-              value: 10,
+              value: 16,
               message: 'Username should be max 10 characters long',
             },
           }}

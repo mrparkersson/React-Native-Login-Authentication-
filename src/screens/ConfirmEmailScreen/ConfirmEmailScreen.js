@@ -40,7 +40,7 @@ const ConfirmEmailScreen = () => {
   const onResendCode = async () => {
     try {
       await Auth.resendSignUp(username);
-      navigation.navigate('SignIn');
+      Alert.alert('Success', 'Code was sent to your email successfully');
     } catch (error) {
       Alert.alert('Oops', error.message);
     }
@@ -57,7 +57,7 @@ const ConfirmEmailScreen = () => {
           rules={{
             required: 'Username is required',
             maxLength: {
-              value: 10,
+              value: 16,
               message: 'Username should be max 10 characters long',
             },
           }}

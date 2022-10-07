@@ -1,20 +1,38 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import SocialSiginButtons from '../../components/SocialSiginButtons';
+import { View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
 
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
+import { Auth } from 'aws-amplify';
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
 const NewPasswordScreen = () => {
+  const route = useRoute();
   const navigation = useNavigation();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm({
+    defaultValues: { username: route?.params?.username },
+  });
 
-  const onSubmit = () => {
-    console.warn('Home');
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (data) => {
+    const { username, code, password } = data;
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+
+    try {
+      await Auth.forgotPasswordSubmit(username, code, password);
+      navigation.navigate('SignIn');
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
+
+    setLoading(false);
   };
 
   const onBackToSignin = () => {
@@ -25,6 +43,14 @@ const NewPasswordScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Reset your password</Text>
+        <CustomInput
+          name="username"
+          control={control}
+          placeholder="Username"
+          rules={{
+            required: 'Username is required',
+          }}
+        />
         <CustomInput
           name="code"
           control={control}
@@ -52,7 +78,10 @@ const NewPasswordScreen = () => {
           secureTextEntry={true}
         />
 
-        <CustomButton text="Submit" onPress={handleSubmit(onSubmit)} />
+        <CustomButton
+          text={loading ? 'Loading' : 'Submit'}
+          onPress={handleSubmit(onSubmit)}
+        />
         <CustomButton
           text="Back to signin"
           onPress={onBackToSignin}

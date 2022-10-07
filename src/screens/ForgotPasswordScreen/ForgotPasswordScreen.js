@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
 
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
+import { Auth } from 'aws-amplify';
 
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation('');
   const { control, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
 
-  const onSend = () => {
-    navigation.navigate('NewPassword');
+  const onSend = async (data) => {
+    const { username } = data;
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await Auth.forgotPassword(username);
+      navigation.navigate('NewPassword', { username });
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
+
+    setLoading(false);
   };
 
   const onBackToSignin = () => {
@@ -35,7 +50,10 @@ const ForgotPasswordScreen = () => {
           }}
         />
 
-        <CustomButton text="SEND" onPress={handleSubmit(onSend)} />
+        <CustomButton
+          text={loading ? 'Loading' : 'SEND'}
+          onPress={handleSubmit(onSend)}
+        />
         <CustomButton
           text="Back to signin"
           onPress={onBackToSignin}
